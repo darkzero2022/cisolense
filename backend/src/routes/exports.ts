@@ -31,6 +31,12 @@ router.post("/", async (req: AuthRequest, res: Response): Promise<void> => {
 
   if (!assessment) { res.status(404).json({ error: "Assessment not found" }); return; }
 
+  const evidenceFiles = await prisma.evidenceFile.findMany({
+    where: { clientOrgId: assessment.clientOrgId, deletedAt: null },
+    select: { fileName: true, controlRef: true, status: true, reviewNote: true, expiresAt: true, version: true },
+    orderBy: [{ status: "asc" }, { fileName: "asc" }],
+  });
+
   const job = await prisma.exportJob.create({
     data: {
       clientOrgId: assessment.clientOrgId,
@@ -72,6 +78,14 @@ router.post("/", async (req: AuthRequest, res: Response): Promise<void> => {
       impact: a.impact,
       status: a.status,
       isCritical: a.isCritical,
+    })),
+    evidenceFiles: evidenceFiles.map((e) => ({
+      fileName: e.fileName,
+      controlRef: e.controlRef,
+      status: e.status,
+      reviewNote: e.reviewNote,
+      expiresAt: e.expiresAt?.toISOString() ?? null,
+      version: e.version,
     })),
   };
 

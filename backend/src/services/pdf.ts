@@ -28,6 +28,14 @@ export interface ReportData {
     status: string;
     isCritical: boolean;
   }>;
+  evidenceFiles: Array<{
+    fileName: string;
+    controlRef: string | null;
+    status: string;
+    reviewNote: string | null;
+    expiresAt: string | null;
+    version: number;
+  }>;
 }
 
 function scoreColor(score: number): string {
@@ -66,6 +74,26 @@ function generateHtml(data: ReportData): string {
       </td>
       <td style="color:${scoreColor(d.score)};font-weight:bold">${scoreLabel(d.score)}</td>
       <td style="font-size:12px;color:#6b7280;max-width:200px">${d.aiAnalysis ? d.aiAnalysis.substring(0, 120) + (d.aiAnalysis.length > 120 ? "…" : "") : "—"}</td>
+    </tr>
+  `).join("");
+
+  const statusColor = (s: string) => {
+    if (s === "ACCEPTED") return "#22c55e";
+    if (s === "REJECTED") return "#ef4444";
+    if (s === "SUBMITTED") return "#3b82f6";
+    return "#9ca3af"; // EXPIRED or other
+  };
+
+  const evidenceRows = data.evidenceFiles.map((e) => `
+    <tr>
+      <td style="font-size:11px;max-width:180px;word-break:break-all">${e.fileName}</td>
+      <td style="text-align:center;font-size:11px">${e.controlRef ?? "—"}</td>
+      <td style="text-align:center">
+        <span style="background:${statusColor(e.status)}20;color:${statusColor(e.status)};border:1px solid ${statusColor(e.status)};border-radius:10px;padding:2px 8px;font-size:10px;font-weight:600">${e.status}</span>
+      </td>
+      <td style="font-size:11px;color:#6b7280;max-width:160px">${e.reviewNote ?? "—"}</td>
+      <td style="text-align:center;font-size:11px">${e.version > 1 ? `v${e.version}` : "—"}</td>
+      <td style="text-align:center;font-size:11px">${e.expiresAt ? new Date(e.expiresAt).toLocaleDateString("en-GB") : "—"}</td>
     </tr>
   `).join("");
 
@@ -208,6 +236,25 @@ function generateHtml(data: ReportData): string {
         </tr>
       </thead>
       <tbody>${actionRows}</tbody>
+    </table>
+  </div>
+  ` : ""}
+
+  ${data.evidenceFiles.length > 0 ? `
+  <div class="section">
+    <div class="section-title">Evidence Status</div>
+    <table>
+      <thead>
+        <tr>
+          <th>File Name</th>
+          <th align="center">Control Ref</th>
+          <th align="center">Status</th>
+          <th>Review Note</th>
+          <th align="center">Version</th>
+          <th align="center">Expires</th>
+        </tr>
+      </thead>
+      <tbody>${evidenceRows}</tbody>
     </table>
   </div>
   ` : ""}
