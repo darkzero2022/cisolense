@@ -1,0 +1,25 @@
+.header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 28px; }
+.title { font-family: var(--font-display); font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+.subtitle { font-size: 12px; color: var(--muted); font-family: var(--font-mono); margin-top: 4px; }
+.kanban { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }
+.column { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.colHeader { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--border); }
+.colLabel { font-size: 11px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); font-weight: 500; }
+.colCount { background: var(--surface2); color: var(--muted); font-size: 11px; font-family: var(--font-mono); padding: 2px 8px; border-radius: 10px; }
+.colBody { padding: 12px; display: flex; flex-direction: column; gap: 10px; min-height: 200px; }
+.actionCard { background: var(--surface2); border: 1px solid var(--border); border-radius: 9px; padding: 14px; transition: border-color 0.15s; }
+.actionCard:hover { border-color: var(--border2); }
+.cardTop { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+.effortBadge { font-size: 9px; font-family: var(--font-mono); padding: 2px 7px; border-radius: 3px; font-weight: 500; }
+.fwRef { font-size: 10px; color: var(--muted); font-family: var(--font-mono); margin-bottom: 5px; }
+.actionTitle { font-size: 13px; font-weight: 500; line-height: 1.4; margin-bottom: 6px; }
+.actionDesc { font-size: 12px; color: var(--muted); line-height: 1.5; margin-bottom: 8px; }
+.cardMeta { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+.impactTag { font-size: 9px; font-family: var(--font-mono); padding: 2px 6px; border-radius: 3px; }
+.assignee { font-size: 11px; color: var(--muted); margin-left: auto; }
+.cardActions { display: flex; gap: 6px; flex-wrap: wrap; padding-top: 10px; border-top: 1px solid var(--border); }
+.moveBtn { background: none; border: 1px solid var(--border2); color: var(--muted); padding: 3px 8px; border-radius: 5px; font-size: 11px; cursor: pointer; transition: all 0.15s; font-family: var(--font-mono); }
+.moveBtn:hover { border-color: var(--text); color: var(--text); }
+.moveBtnDone { background: var(--emerald-dim); border: 1px solid rgba(0,229,160,0.3); color: var(--emerald); padding: 3px 8px; border-radius: 5px; font-size: 11px; cursor: pointer; transition: all 0.15s; font-family: var(--font-mono); }
+.moveBtnDone:hover { background: var(--emerald); color: #000; }
+.emptyCol { text-align: center; padding: 32px 16px; color: var(--muted); font-size: 12px; font-family: var(--font-mono); opacity: 0.6; }

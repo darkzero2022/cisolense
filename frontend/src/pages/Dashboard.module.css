@@ -1,0 +1,32 @@
+.header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 28px; }
+.title { font-family: var(--font-display); font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+.subtitle { font-size: 12px; color: var(--muted); font-family: var(--font-mono); margin-top: 4px; }
+.statsGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+.statCard { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; overflow: hidden; position: relative; }
+.accentLine { height: 2px; background: var(--accent, var(--cyan)); margin: -20px -22px 16px; }
+.statLabel { font-size: 11px; color: var(--muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+.statValue { font-family: var(--font-display); font-size: 32px; font-weight: 700; letter-spacing: -1px; }
+.statDelta { font-size: 12px; color: var(--muted); margin-top: 4px; font-family: var(--font-mono); }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.cardHeader { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+.cardTitle { font-family: var(--font-display); font-size: 14px; font-weight: 600; }
+.table { width: 100%; border-collapse: collapse; }
+.table th { text-align: left; font-size: 11px; font-family: var(--font-mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; padding: 10px 20px; border-bottom: 1px solid var(--border); font-weight: 400; }
+.table td { padding: 12px 20px; font-size: 13px; border-bottom: 1px solid var(--border); cursor: pointer; }
+.table tr:last-child td { border-bottom: none; }
+.table tr:hover td { background: rgba(255,255,255,0.02); }
+.clientCell { display: flex; align-items: center; gap: 8px; }
+.orgBadge { width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800; font-family: var(--font-display); flex-shrink: 0; }
+.muted { color: var(--muted); font-size: 12px; }
+.fwTag { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 4px; padding: 2px 7px; font-size: 10px; font-family: var(--font-mono); }
+.actionRow { display: flex; gap: 12px; padding: 12px 20px; border-bottom: 1px solid var(--border); align-items: flex-start; }
+.actionRow:last-child { border-bottom: none; }
+.critDot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); margin-top: 6px; flex-shrink: 0; }
+.actionFw { font-size: 11px; color: var(--muted); font-family: var(--font-mono); margin-bottom: 3px; }
+.actionTitle { font-size: 13px; }
+.empty { color: var(--muted); font-size: 13px; text-align: center; padding: 12px 20px; }
+.link { background: none; border: none; color: var(--cyan); cursor: pointer; font-size: 13px; text-decoration: underline; }
+.btnCyan { background: var(--cyan); border: none; color: #000; padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; font-family: var(--font-display); cursor: pointer; transition: opacity 0.2s; }
+.btnCyan:hover { opacity: 0.9; }
+.btnSm { background: var(--surface2); border: 1px solid var(--border2); color: var(--text); padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; transition: all 0.15s; }
+.btnSm:hover { border-color: var(--cyan); color: var(--cyan); }

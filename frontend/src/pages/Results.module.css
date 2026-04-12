@@ -1,0 +1,45 @@
+.page { background: var(--bg); min-height: 100vh; padding: 32px 20px; }
+.container { max-width: 960px; margin: 0 auto; }
+.loading { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; gap: 16px; color: var(--muted); font-family: var(--font-mono); font-size: 13px; }
+.spinner { width: 32px; height: 32px; border: 2px solid var(--border2); border-top-color: var(--cyan); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.backBtn { background: none; border: none; color: var(--muted); font-family: var(--font-mono); font-size: 12px; cursor: pointer; margin-bottom: 20px; transition: color 0.15s; }
+.backBtn:hover { color: var(--cyan); }
+.pageHeader { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
+.frameworkBadge { display: inline-block; background: var(--cyan-dim); color: var(--cyan); border: 1px solid rgba(0,212,255,0.2); border-radius: 5px; padding: 3px 10px; font-size: 11px; font-family: var(--font-mono); margin-bottom: 8px; }
+.title { font-family: var(--font-display); font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
+.subtitle { font-size: 13px; color: var(--muted); margin-top: 4px; font-family: var(--font-mono); }
+.exportBtns { display: flex; gap: 8px; align-items: center; }
+.heroCard { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px 32px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.heroLeft { }
+.scoreLabel { font-size: 11px; color: var(--muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+.scoreHero { font-family: var(--font-display); font-size: 80px; font-weight: 800; letter-spacing: -4px; line-height: 1; margin-bottom: 12px; }
+.scorePct { font-size: 36px; letter-spacing: -1px; }
+.heroStats { display: flex; gap: 40px; }
+.heroStat { text-align: center; }
+.heroStatLabel { font-size: 11px; color: var(--muted); font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 6px; }
+.heroStatValue { font-family: var(--font-display); font-size: 20px; font-weight: 700; }
+.heroStatSub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.cardHeader { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+.cardTitle { font-family: var(--font-display); font-size: 14px; font-weight: 600; }
+.domainList { padding: 8px 0; }
+.domainRow { display: flex; align-items: center; gap: 12px; padding: 10px 20px; border-bottom: 1px solid var(--border); }
+.domainRow:last-child { border-bottom: none; }
+.domainName { font-size: 12px; font-family: var(--font-mono); min-width: 180px; color: var(--muted); }
+.domainBar { flex: 1; height: 5px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+.domainFill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+.domainScore { font-family: var(--font-mono); font-size: 13px; font-weight: 500; min-width: 40px; text-align: right; }
+.actionsList { padding: 8px 16px; }
+.actionRow { display: flex; align-items: flex-start; gap: 14px; padding: 14px 4px; border-bottom: 1px solid var(--border); }
+.actionRow:last-child { border-bottom: none; }
+.actionTags { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; min-width: 80px; }
+.effortTag { font-size: 9px; font-family: var(--font-mono); padding: 2px 6px; border-radius: 3px; text-align: center; font-weight: 500; }
+.actionContent { flex: 1; }
+.actionRef { font-size: 11px; color: var(--muted); font-family: var(--font-mono); margin-bottom: 4px; }
+.actionTitle { font-size: 13px; font-weight: 500; line-height: 1.4; }
+.empty { text-align: center; padding: 32px 20px; color: var(--muted); font-size: 13px; }
+.btnSm { background: var(--surface2); border: 1px solid var(--border2); color: var(--text); padding: 7px 14px; border-radius: 7px; font-size: 12px; cursor: pointer; transition: all 0.15s; }
+.btnSm:hover { border-color: var(--cyan); color: var(--cyan); }
+.btnCyan { background: var(--cyan); border: none; color: #000; padding: 7px 16px; border-radius: 7px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+.btnCyan:hover { opacity: 0.9; }

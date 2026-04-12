@@ -1,0 +1,125 @@
+.panel {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  flex: 1;
+}
+
+.count {
+  font-size: 11px;
+  background: var(--surface3, rgba(255,255,255,0.06));
+  color: var(--muted);
+  border-radius: 10px;
+  padding: 1px 7px;
+}
+
+.uploadBtn {
+  background: transparent;
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  font-size: 11px;
+  font-family: var(--font-mono);
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.uploadBtn:hover { background: rgba(0,224,255,0.08); }
+.uploadBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.error {
+  font-size: 12px;
+  color: var(--red);
+  margin-bottom: 8px;
+}
+
+.empty {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+  padding: 12px 0;
+}
+
+.list { display: flex; flex-direction: column; gap: 6px; }
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--surface3, rgba(255,255,255,0.04));
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.itemLeft { display: flex; align-items: flex-start; gap: 8px; min-width: 0; }
+.fileIcon { font-size: 16px; line-height: 1.4; flex-shrink: 0; }
+
+.fileName {
+  font-size: 12px;
+  color: var(--cyan);
+  text-decoration: none;
+  word-break: break-all;
+  display: block;
+}
+.fileName:hover { text-decoration: underline; }
+
+.fileMeta {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  margin-top: 2px;
+}
+
+.reviewNote {
+  font-size: 11px;
+  color: var(--muted);
+  font-style: italic;
+  margin-top: 3px;
+}
+
+.itemRight {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.status {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.btnAccept, .btnReject, .btnDelete, .btnResubmit {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background 0.15s;
+  line-height: 1;
+}
+.btnAccept:hover { background: rgba(52,211,153,0.15); }
+.btnReject:hover { background: rgba(248,113,113,0.15); }
+.btnResubmit:hover { background: rgba(0,212,255,0.15); }
+.btnDelete:hover { background: rgba(248,113,113,0.1); }

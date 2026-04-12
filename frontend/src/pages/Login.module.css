@@ -1,0 +1,14 @@
+.bg { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg); position: relative; overflow: hidden; }
+.bg::before { content:''; position:absolute; width:600px; height:600px; background: radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%); top:-100px; left:-100px; pointer-events:none; }
+.card { background: var(--surface); border: 1px solid var(--border2); border-radius: 16px; padding: 48px; width: 420px; position: relative; z-index: 1; animation: fadeUp 0.4s ease; }
+.logo { font-family: var(--font-display); font-weight: 800; font-size: 28px; letter-spacing: -1px; margin-bottom: 6px; }
+.logo span { color: var(--cyan); }
+.tagline { font-size: 13px; color: var(--muted); font-family: var(--font-mono); margin-bottom: 36px; }
+.field { margin-bottom: 20px; }
+.label { display: block; font-size: 11px; font-family: var(--font-mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+.input { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; color: var(--text); font-size: 14px; outline: none; transition: border-color 0.2s; }
+.input:focus { border-color: var(--cyan); }
+.error { background: var(--red-dim); color: var(--red); border: 1px solid rgba(244,63,94,0.3); border-radius: 6px; padding: 10px 14px; font-size: 13px; margin-bottom: 12px; }
+.btn { width: 100%; background: var(--cyan); color: #000; border: none; border-radius: 8px; padding: 13px; font-size: 14px; font-weight: 600; font-family: var(--font-display); cursor: pointer; transition: opacity 0.2s; margin-top: 4px; }
+.btn:hover { opacity: 0.9; } .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.hint { text-align: center; font-size: 11px; color: var(--muted); font-family: var(--font-mono); margin-top: 20px; }

@@ -1,0 +1,15 @@
+.sidebar { width: var(--sidebar-width); min-height: 100vh; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 24px 0; position: fixed; top: 0; left: 0; z-index: 100; }
+.logo { font-family: var(--font-display); font-weight: 800; font-size: 20px; letter-spacing: -0.5px; padding: 0 24px 24px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+.logo span { color: var(--cyan); }
+.section { font-size: 10px; font-family: var(--font-mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; padding: 12px 24px 6px; }
+.navItem { display: flex; align-items: center; gap: 10px; padding: 10px 24px; font-size: 13.5px; color: var(--muted); transition: all 0.15s; border-left: 2px solid transparent; font-weight: 500; }
+.navItem:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+.active { color: var(--cyan) !important; background: var(--cyan-dim) !important; border-left-color: var(--cyan) !important; }
+.icon { font-family: var(--font-mono); font-size: 14px; }
+.bottom { margin-top: auto; padding: 20px 24px 0; border-top: 1px solid var(--border); }
+.userChip { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--cyan), var(--emerald)); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #000; font-family: var(--font-display); flex-shrink: 0; }
+.userName { font-size: 13px; font-weight: 500; }
+.userRole { font-size: 11px; color: var(--muted); font-family: var(--font-mono); }
+.logoutBtn { width: 100%; background: none; border: 1px solid var(--border); color: var(--muted); padding: 7px; border-radius: 6px; font-size: 12px; transition: all 0.15s; }
+.logoutBtn:hover { border-color: var(--red); color: var(--red); }

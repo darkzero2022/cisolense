@@ -1,0 +1,6 @@
+.pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-family: var(--font-mono); font-weight: 500; }
+.pill::before { content: ''; width: 5px; height: 5px; border-radius: 50%; }
+.green { background: var(--emerald-dim); color: var(--emerald); } .green::before { background: var(--emerald); }
+.amber { background: var(--amber-dim); color: var(--amber); } .amber::before { background: var(--amber); }
+.red { background: var(--red-dim); color: var(--red); } .red::before { background: var(--red); }
+.cyan { background: var(--cyan-dim); color: var(--cyan); } .cyan::before { background: var(--cyan); }

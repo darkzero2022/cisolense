@@ -1,0 +1,12 @@
+{
+  "name": "cisolens",
+  "version": "1.0.0",
+  "description": "CISOLens vCISO Command Center",
+  "private": true,
+  "scripts": {
+    "setup": "node scripts/setup.js",
+    "start": "node scripts/start.js",
+    "start:backend": "cd backend && npm run dev",
+    "start:frontend": "cd frontend && npm run dev"
+  }
+}

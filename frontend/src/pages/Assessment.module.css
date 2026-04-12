@@ -1,0 +1,41 @@
+.page { background: var(--bg); min-height: 100vh; padding: 32px 20px; }
+.container { max-width: 720px; margin: 0 auto; }
+.loading { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; gap: 16px; color: var(--muted); font-family: var(--font-mono); font-size: 13px; }
+.spinner { width: 32px; height: 32px; border: 2px solid var(--border2); border-top-color: var(--cyan); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.backBtn { background: none; border: none; color: var(--muted); font-family: var(--font-mono); font-size: 12px; cursor: pointer; margin-bottom: 24px; transition: color 0.15s; }
+.backBtn:hover { color: var(--cyan); }
+.header { margin-bottom: 20px; }
+.frameworkBadge { display: inline-block; background: var(--cyan-dim); color: var(--cyan); border: 1px solid rgba(0,212,255,0.2); border-radius: 5px; padding: 3px 10px; font-size: 11px; font-family: var(--font-mono); margin-bottom: 8px; }
+.title { font-family: var(--font-display); font-size: 22px; font-weight: 700; }
+.progressCard { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 20px; }
+.progressTop { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.progressLabel { font-size: 13px; font-weight: 500; }
+.progressPct { font-family: var(--font-mono); font-size: 13px; color: var(--cyan); }
+.progressTrack { height: 3px; background: var(--surface2); border-radius: 2px; overflow: hidden; margin-bottom: 14px; }
+.progressFill { height: 100%; background: linear-gradient(90deg, var(--cyan), var(--emerald)); border-radius: 2px; transition: width 0.4s ease; }
+.domainPills { display: flex; gap: 6px; flex-wrap: wrap; }
+.domainPill { font-size: 11px; font-family: var(--font-mono); padding: 3px 10px; border-radius: 20px; background: var(--surface2); color: var(--muted); border: 1px solid var(--border); transition: all 0.2s; }
+.domainActive { background: var(--cyan-dim); color: var(--cyan); border-color: rgba(0,212,255,0.3); }
+.questionCard { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 32px; margin-bottom: 16px; animation: fadeUp 0.3s ease; }
+.controlRef { font-size: 11px; font-family: var(--font-mono); color: var(--cyan); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+.controlTitle { font-size: 12px; color: var(--muted); margin-bottom: 14px; font-family: var(--font-mono); }
+.questionText { font-family: var(--font-display); font-size: 18px; font-weight: 600; line-height: 1.5; margin-bottom: 10px; }
+.helpText { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 24px; border-left: 2px solid var(--border2); padding-left: 12px; }
+.options { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
+.option { display: flex; align-items: flex-start; gap: 14px; padding: 16px 18px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.15s; }
+.option:hover { border-color: var(--cyan); background: var(--cyan-dim); }
+.optSelected { border-color: var(--cyan) !important; background: var(--cyan-dim) !important; }
+.optDot { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--border2); flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; transition: border-color 0.15s; }
+.optSelected .optDot { border-color: var(--cyan); }
+.optDotFill { width: 10px; height: 10px; border-radius: 50%; background: var(--cyan); }
+.optContent { flex: 1; }
+.optLabel { font-size: 14px; font-weight: 500; margin-bottom: 3px; }
+.optScore { font-size: 11px; color: var(--muted); font-family: var(--font-mono); }
+.navRow { display: flex; justify-content: space-between; align-items: center; }
+.btnBack { background: var(--surface); border: 1px solid var(--border2); color: var(--muted); padding: 11px 20px; border-radius: 8px; font-size: 13px; cursor: pointer; transition: all 0.15s; }
+.btnBack:hover:not(:disabled) { color: var(--text); border-color: var(--text); }
+.btnBack:disabled { opacity: 0.4; cursor: not-allowed; }
+.btnNext { background: var(--cyan); border: none; color: #000; padding: 11px 28px; border-radius: 8px; font-size: 14px; font-weight: 700; font-family: var(--font-display); cursor: pointer; transition: opacity 0.2s; }
+.btnNext:hover:not(:disabled) { opacity: 0.9; }
+.btnNext:disabled { opacity: 0.4; cursor: not-allowed; }

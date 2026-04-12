@@ -1,0 +1,54 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+
+# Environment files — NEVER commit these
+.env
+.env.local
+.env.production
+
+# Database
+*.db
+*.db-journal
+*.sqlite
+
+# Prisma migrations lock (keep migrations/, ignore this)
+prisma/migrations/migration_lock.toml
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Uploads
+uploads/
+
+# Coverage
+coverage/
+
+# Playwright test results & reports
+test-results/
+playwright-report/
+
+# Compiled JS artifacts (TypeScript source is canonical)
+frontend/src/**/*.js
+frontend/src/**/*.js.map
+
+# Misc
+*.zip

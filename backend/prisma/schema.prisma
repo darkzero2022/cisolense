@@ -1,0 +1,311 @@
+// CISOLens — Prisma Schema
+// Multi-tenant: Platform Admin > vCISO > Client Org > Client User
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  passwordHash   String
+  firstName      String
+  lastName       String
+  role           String   @default("VCISO")
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  managedOrgs    ClientOrg[]    @relation("vCISOToOrg")
+  exportJobs     ExportJob[]
+  clientOrgId    String?
+  clientOrg      ClientOrg?     @relation("OrgMembers", fields: [clientOrgId], references: [id])
+  refreshTokens  RefreshToken[]
+  assessments    Assessment[]   @relation("AssessmentCreator")
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String    @id @default(cuid())
+  token     String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+  revokedAt DateTime?
+
+  @@map("refresh_tokens")
+}
+
+model ClientOrg {
+  id           String   @id @default(cuid())
+  name         String
+  shortCode    String
+  sector       String
+  country      String   @default("Unknown")
+  contactName  String?
+  contactEmail String?
+  logoColor    String   @default("#00d4ff")
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  vcisoId      String
+  vciso        User     @relation("vCISOToOrg", fields: [vcisoId], references: [id])
+  members      User[]   @relation("OrgMembers")
+
+  assessments    Assessment[]
+  actions        Action[]
+  evidenceFiles  EvidenceFile[]
+  evidenceRequests EvidenceRequest[]
+  scans          Scan[]
+  exportJobs     ExportJob[]
+  orgFrameworks  OrgFramework[]
+
+  @@map("client_orgs")
+}
+
+model OrgFramework {
+  id            String    @id @default(cuid())
+  clientOrgId   String
+  clientOrg     ClientOrg @relation(fields: [clientOrgId], references: [id], onDelete: Cascade)
+  frameworkId   String
+  framework     Framework @relation(fields: [frameworkId], references: [id])
+  isActive      Boolean   @default(true)
+  nextDueDate   DateTime?
+  createdAt     DateTime  @default(now())
+
+  @@unique([clientOrgId, frameworkId])
+  @@map("org_frameworks")
+}
+
+model Framework {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  shortName   String
+  version     String
+  region      String   @default("Global")
+  description String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  domains       Domain[]
+  assessments   Assessment[]
+  orgFrameworks OrgFramework[]
+
+  @@map("frameworks")
+}
+
+model Domain {
+  id          String    @id @default(cuid())
+  frameworkId String
+  framework   Framework @relation(fields: [frameworkId], references: [id], onDelete: Cascade)
+  code        String
+  name        String
+  order       Int
+  controls    Control[]
+
+  @@map("domains")
+}
+
+model Control {
+  id          String   @id @default(cuid())
+  domainId    String
+  domain      Domain   @relation(fields: [domainId], references: [id], onDelete: Cascade)
+  controlId   String
+  title       String
+  description String
+  order       Int
+
+  questions         Question[]
+  assessmentAnswers AssessmentAnswer[]
+
+  @@map("controls")
+}
+
+model Question {
+  id        String   @id @default(cuid())
+  controlId String
+  control   Control  @relation(fields: [controlId], references: [id], onDelete: Cascade)
+  text      String
+  helpText  String?
+  order     Int
+  options   String
+
+  assessmentAnswers AssessmentAnswer[]
+
+  @@map("questions")
+}
+
+model Assessment {
+  id            String    @id @default(cuid())
+  clientOrgId   String
+  clientOrg     ClientOrg @relation(fields: [clientOrgId], references: [id], onDelete: Cascade)
+  frameworkId   String
+  framework     Framework @relation(fields: [frameworkId], references: [id])
+  createdById   String
+  createdBy     User      @relation("AssessmentCreator", fields: [createdById], references: [id])
+  status        String    @default("DRAFT")
+  overallScore  Float?
+  aiSummary     String?
+  startedAt     DateTime?
+  completedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  answers      AssessmentAnswer[]
+  domainScores DomainScore[]
+  actions      Action[]
+
+  @@map("assessments")
+}
+
+model AssessmentAnswer {
+  id           String     @id @default(cuid())
+  assessmentId String
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  controlId    String
+  control      Control    @relation(fields: [controlId], references: [id])
+  questionId   String
+  question     Question   @relation(fields: [questionId], references: [id])
+  value        Int
+  note         String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@unique([assessmentId, questionId])
+  @@map("assessment_answers")
+}
+
+model DomainScore {
+  id           String     @id @default(cuid())
+  assessmentId String
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  domainCode   String
+  domainName   String
+  score        Float
+  aiAnalysis   String?
+
+  @@unique([assessmentId, domainCode])
+  @@map("domain_scores")
+}
+
+model Action {
+  id           String     @id @default(cuid())
+  clientOrgId  String
+  clientOrg    ClientOrg  @relation(fields: [clientOrgId], references: [id], onDelete: Cascade)
+  assessmentId String?
+  assessment   Assessment? @relation(fields: [assessmentId], references: [id])
+  title        String
+  description  String?
+  frameworkRef String?
+  effort       String     @default("MEDIUM")
+  impact       String     @default("MEDIUM")
+  priority     Int        @default(5)
+  isCritical   Boolean    @default(false)
+  status       String     @default("TODO")
+  dueDate      DateTime?
+  assignedTo   String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@map("actions")
+}
+
+model EvidenceFile {
+  id           String    @id @default(cuid())
+  clientOrgId  String
+  clientOrg    ClientOrg @relation(fields: [clientOrgId], references: [id], onDelete: Cascade)
+  controlRef   String?
+  frameworkRef String?
+  fileName     String
+  fileSize     Int
+  mimeType     String
+  storagePath  String
+  uploadedById String
+  status       String    @default("SUBMITTED")
+  reviewNote   String?
+  expiresAt    DateTime?
+  version      Int       @default(1)
+  previousId   String?
+  previous     EvidenceFile? @relation("EvidenceVersion", fields: [previousId], references: [id])
+  revisions    EvidenceFile[] @relation("EvidenceVersion")
+  requestId    String?
+  request      EvidenceRequest? @relation(fields: [requestId], references: [id], onDelete: SetNull)
+  reviewedAt   DateTime?
+  reviewedById String?
+  deletedAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("evidence_files")
+}
+
+model EvidenceRequest {
+  id           String    @id @default(cuid())
+  clientOrgId  String
+  clientOrg    ClientOrg @relation(fields: [clientOrgId], references: [id], onDelete: Cascade)
+  controlRef   String
+  frameworkRef String?
+  requestNote  String
+  status       String    @default("PENDING")
+  dueDate      DateTime?
+  createdById  String
+  createdAt    DateTime  @default(now())
+  fulfilledAt  DateTime?
+  evidenceFiles EvidenceFile[]
+
+  @@map("evidence_requests")
+}
+
+model Scan {
+  id          String    @id @default(cuid())
+  clientOrgId String
+  clientOrg   ClientOrg @relation(fields: [clientOrgId], references: [id], onDelete: Cascade)
+  target      String
+  scanType    String    @default("basic")
+  status      String    @default("QUEUED")
+  summary     String?
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+  findings    ScanFinding[]
+
+  @@map("scans")
+}
+
+model ScanFinding {
+  id        String   @id @default(cuid())
+  scanId    String
+  scan      Scan     @relation(fields: [scanId], references: [id], onDelete: Cascade)
+  key       String
+  severity  String
+  details   String
+  controls  String
+  createdAt DateTime @default(now())
+
+  @@map("scan_findings")
+}
+
+model ExportJob {
+  id           String    @id @default(cuid())
+  clientOrgId  String
+  clientOrg    ClientOrg @relation(fields: [clientOrgId], references: [id], onDelete: Cascade)
+  assessmentId String
+  type         String    @default("PDF")
+  status       String    @default("PENDING")
+  filePath     String?
+  error        String?
+  createdById  String
+  createdBy    User      @relation(fields: [createdById], references: [id])
+  createdAt    DateTime  @default(now())
+  completedAt  DateTime?
+
+  @@map("export_jobs")
+}
