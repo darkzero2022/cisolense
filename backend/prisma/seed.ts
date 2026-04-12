@@ -379,7 +379,7 @@ async function main() {
 
   console.log("✅ Frameworks seeded");
 
-  // ── ISO 27001:2022 DOMAINS + CONTROLS ───────────────────────────────────────
+  // ── ISO 27001:2022 DOMAINS + CONTROLS (full 93 Annex A controls) ────────────
   const isoOptions = JSON.stringify([
     { value: 3, label: "Fully implemented and regularly reviewed" },
     { value: 2, label: "Partially implemented with gaps" },
@@ -387,61 +387,160 @@ async function main() {
     { value: 0, label: "Not implemented" },
   ]);
 
-  const isoDomainCount = await prisma.domain.count({ where: { frameworkId: iso.id } });
-  if (isoDomainCount === 0) {
-    const isoDomains = [
-      { code: "A.5", name: "Information Security Policies", controls: [
-        { controlId: "A.5.1", title: "Policies for information security", mapTo: "GV.OC-01" },
-        { controlId: "A.5.2", title: "Review of policies for information security", mapTo: "GV.OC-01" },
-      ]},
-      { code: "A.6", name: "Organisation of Information Security", controls: [
-        { controlId: "A.6.1", title: "Internal organisation", mapTo: "GV.RM-01" },
-        { controlId: "A.6.2", title: "Mobile devices and remote working", mapTo: "PR.AC-01" },
-        { controlId: "A.6.3", title: "Information security in project management", mapTo: "GV.RM-01" },
-      ]},
-      { code: "A.7", name: "Human Resource Security", controls: [
-        { controlId: "A.7.1", title: "Prior to employment", mapTo: "GV.RM-01" },
-        { controlId: "A.7.2", title: "During employment", mapTo: "GV.OC-01" },
-        { controlId: "A.7.3", title: "Termination and change of employment", mapTo: "PR.AC-01" },
-      ]},
-      { code: "A.8", name: "Asset Management", controls: [
-        { controlId: "A.8.1", title: "Responsibility for assets", mapTo: "ID.AM-01" },
-        { controlId: "A.8.2", title: "Information classification", mapTo: "PR.DS-01" },
-        { controlId: "A.8.3", title: "Media handling", mapTo: "PR.DS-01" },
-        { controlId: "A.8.5", title: "Transfer of information", mapTo: "PR.DS-01" },
-      ]},
-    ];
+  // Always refresh ISO 27001 to ensure full 93-control coverage
+  await prisma.domain.deleteMany({ where: { frameworkId: iso.id } });
 
-    for (let i = 0; i < isoDomains.length; i += 1) {
-      const d = isoDomains[i];
-      await prisma.domain.create({
-        data: {
-          frameworkId: iso.id,
-          code: d.code,
-          name: d.name,
-          order: i + 1,
-          controls: {
-            create: d.controls.map((c, idx) => ({
-              controlId: c.controlId,
-              order: idx + 1,
-              title: c.title,
-              description: c.title,
-              questions: {
-                create: [{
-                  order: 1,
-                  text: `How effectively is ${c.title.toLowerCase()} implemented and maintained?`,
-                  helpText: `ISO 27001:2022 ${c.controlId}. Cross-maps to NIST CSF: ${c.mapTo}`,
-                  options: isoOptions,
-                }],
-              },
-            })),
-          },
+  const isoDomains: Array<{
+    code: string; name: string; order: number;
+    controls: Array<{ controlId: string; title: string; mapTo: string; pci?: string }>;
+  }> = [
+    {
+      code: "A.5", name: "Organisational Controls", order: 1,
+      controls: [
+        { controlId: "A.5.1",  title: "Policies for information security",                           mapTo: "GV.OC-01" },
+        { controlId: "A.5.2",  title: "Information security roles and responsibilities",              mapTo: "GV.OC-01" },
+        { controlId: "A.5.3",  title: "Segregation of duties",                                       mapTo: "PR.AC-01" },
+        { controlId: "A.5.4",  title: "Management responsibilities",                                  mapTo: "GV.OC-01" },
+        { controlId: "A.5.5",  title: "Contact with authorities",                                     mapTo: "RS.RP-01" },
+        { controlId: "A.5.6",  title: "Contact with special interest groups",                         mapTo: "GV.RM-01" },
+        { controlId: "A.5.7",  title: "Threat intelligence",                                          mapTo: "DE.CM-01" },
+        { controlId: "A.5.8",  title: "Information security in project management",                   mapTo: "GV.RM-01" },
+        { controlId: "A.5.9",  title: "Inventory of information and other associated assets",         mapTo: "ID.AM-01" },
+        { controlId: "A.5.10", title: "Acceptable use of information and other associated assets",    mapTo: "GV.OC-01" },
+        { controlId: "A.5.11", title: "Return of assets",                                             mapTo: "ID.AM-01" },
+        { controlId: "A.5.12", title: "Classification of information",                                mapTo: "PR.DS-01" },
+        { controlId: "A.5.13", title: "Labelling of information",                                     mapTo: "PR.DS-01" },
+        { controlId: "A.5.14", title: "Information transfer",                                         mapTo: "PR.DS-01" },
+        { controlId: "A.5.15", title: "Access control",                                               mapTo: "PR.AC-01", pci: "R7.1, R8.1" },
+        { controlId: "A.5.16", title: "Identity management",                                          mapTo: "PR.AC-01", pci: "R8.1" },
+        { controlId: "A.5.17", title: "Authentication information",                                   mapTo: "PR.AC-01", pci: "R8.2, R8.3" },
+        { controlId: "A.5.18", title: "Access rights",                                                mapTo: "PR.AC-01", pci: "R7.2" },
+        { controlId: "A.5.19", title: "Information security in supplier relationships",               mapTo: "GV.RM-01" },
+        { controlId: "A.5.20", title: "Addressing information security within supplier agreements",   mapTo: "GV.RM-01" },
+        { controlId: "A.5.21", title: "Managing information security in the ICT supply chain",       mapTo: "GV.RM-01" },
+        { controlId: "A.5.22", title: "Monitoring, review and change management of supplier services", mapTo: "DE.CM-01" },
+        { controlId: "A.5.23", title: "Information security for use of cloud services",              mapTo: "GV.RM-01" },
+        { controlId: "A.5.24", title: "Information security incident management planning and preparation", mapTo: "RS.RP-01" },
+        { controlId: "A.5.25", title: "Assessment and decision on information security events",      mapTo: "RS.RP-01" },
+        { controlId: "A.5.26", title: "Response to information security incidents",                  mapTo: "RS.RP-01" },
+        { controlId: "A.5.27", title: "Learning from information security incidents",                mapTo: "RS.RP-01" },
+        { controlId: "A.5.28", title: "Collection of evidence",                                      mapTo: "RS.RP-01" },
+        { controlId: "A.5.29", title: "Information security during disruption",                      mapTo: "RC.RP-01" },
+        { controlId: "A.5.30", title: "ICT readiness for business continuity",                       mapTo: "RC.RP-01" },
+        { controlId: "A.5.31", title: "Legal, statutory, regulatory and contractual requirements",   mapTo: "GV.OC-01" },
+        { controlId: "A.5.32", title: "Intellectual property rights",                                mapTo: "GV.OC-01" },
+        { controlId: "A.5.33", title: "Protection of records",                                       mapTo: "PR.DS-01" },
+        { controlId: "A.5.34", title: "Privacy and protection of personally identifiable information", mapTo: "PR.DS-01" },
+        { controlId: "A.5.35", title: "Independent review of information security",                  mapTo: "GV.RM-01" },
+        { controlId: "A.5.36", title: "Compliance with policies, rules and standards for information security", mapTo: "GV.OC-01" },
+        { controlId: "A.5.37", title: "Documented operating procedures",                             mapTo: "GV.OC-01" },
+      ],
+    },
+    {
+      code: "A.6", name: "People Controls", order: 2,
+      controls: [
+        { controlId: "A.6.1", title: "Screening",                                                    mapTo: "GV.OC-01" },
+        { controlId: "A.6.2", title: "Terms and conditions of employment",                           mapTo: "GV.OC-01" },
+        { controlId: "A.6.3", title: "Information security awareness, education and training",       mapTo: "GV.OC-01" },
+        { controlId: "A.6.4", title: "Disciplinary process",                                         mapTo: "GV.OC-01" },
+        { controlId: "A.6.5", title: "Responsibilities after termination or change of employment",   mapTo: "PR.AC-01" },
+        { controlId: "A.6.6", title: "Confidentiality or non-disclosure agreements",                 mapTo: "GV.OC-01" },
+        { controlId: "A.6.7", title: "Remote working",                                               mapTo: "PR.AC-01" },
+        { controlId: "A.6.8", title: "Information security event reporting",                         mapTo: "RS.RP-01" },
+      ],
+    },
+    {
+      code: "A.7", name: "Physical Controls", order: 3,
+      controls: [
+        { controlId: "A.7.1",  title: "Physical security perimeters",                                mapTo: "PR.AC-01", pci: "R9.1" },
+        { controlId: "A.7.2",  title: "Physical entry",                                              mapTo: "PR.AC-01", pci: "R9.3" },
+        { controlId: "A.7.3",  title: "Securing offices, rooms and facilities",                      mapTo: "PR.AC-01" },
+        { controlId: "A.7.4",  title: "Physical security monitoring",                                mapTo: "DE.CM-01" },
+        { controlId: "A.7.5",  title: "Protecting against physical and environmental threats",       mapTo: "RC.RP-01" },
+        { controlId: "A.7.6",  title: "Working in secure areas",                                     mapTo: "PR.AC-01" },
+        { controlId: "A.7.7",  title: "Clear desk and clear screen",                                 mapTo: "PR.DS-01" },
+        { controlId: "A.7.8",  title: "Equipment siting and protection",                             mapTo: "ID.AM-01" },
+        { controlId: "A.7.9",  title: "Security of assets off-premises",                             mapTo: "ID.AM-01" },
+        { controlId: "A.7.10", title: "Storage media",                                               mapTo: "PR.DS-01", pci: "R9.4" },
+        { controlId: "A.7.11", title: "Supporting utilities",                                        mapTo: "RC.RP-01" },
+        { controlId: "A.7.12", title: "Cabling security",                                            mapTo: "PR.AC-01" },
+        { controlId: "A.7.13", title: "Equipment maintenance",                                       mapTo: "ID.AM-01" },
+        { controlId: "A.7.14", title: "Secure disposal or re-use of equipment",                      mapTo: "PR.DS-01" },
+      ],
+    },
+    {
+      code: "A.8", name: "Technological Controls", order: 4,
+      controls: [
+        { controlId: "A.8.1",  title: "User endpoint devices",                                       mapTo: "ID.AM-01" },
+        { controlId: "A.8.2",  title: "Privileged access rights",                                    mapTo: "PR.AC-01", pci: "R7.2, R8.2" },
+        { controlId: "A.8.3",  title: "Information access restriction",                              mapTo: "PR.AC-01", pci: "R7.2" },
+        { controlId: "A.8.4",  title: "Access to source code",                                       mapTo: "PR.AC-01" },
+        { controlId: "A.8.5",  title: "Secure authentication",                                       mapTo: "PR.AC-01", pci: "R8.3" },
+        { controlId: "A.8.6",  title: "Capacity management",                                         mapTo: "ID.AM-02" },
+        { controlId: "A.8.7",  title: "Protection against malware",                                  mapTo: "DE.CM-01", pci: "R5.1, R5.2" },
+        { controlId: "A.8.8",  title: "Management of technical vulnerabilities",                     mapTo: "DE.CM-01", pci: "R11.2" },
+        { controlId: "A.8.9",  title: "Configuration management",                                    mapTo: "ID.AM-02", pci: "R2.2" },
+        { controlId: "A.8.10", title: "Information deletion",                                        mapTo: "PR.DS-01" },
+        { controlId: "A.8.11", title: "Data masking",                                                mapTo: "PR.DS-01", pci: "R3.3" },
+        { controlId: "A.8.12", title: "Data leakage prevention",                                     mapTo: "PR.DS-01" },
+        { controlId: "A.8.13", title: "Information backup",                                          mapTo: "RC.RP-01" },
+        { controlId: "A.8.14", title: "Redundancy of information processing facilities",             mapTo: "RC.RP-01" },
+        { controlId: "A.8.15", title: "Logging",                                                     mapTo: "DE.CM-01", pci: "R10.1, R10.2" },
+        { controlId: "A.8.16", title: "Monitoring activities",                                       mapTo: "DE.CM-01", pci: "R10.5" },
+        { controlId: "A.8.17", title: "Clock synchronisation",                                       mapTo: "DE.CM-01" },
+        { controlId: "A.8.18", title: "Use of privileged utility programs",                          mapTo: "PR.AC-01" },
+        { controlId: "A.8.19", title: "Installation of software on operational systems",             mapTo: "ID.AM-02", pci: "R6.1" },
+        { controlId: "A.8.20", title: "Networks security",                                           mapTo: "PR.AC-01", pci: "R1.1" },
+        { controlId: "A.8.21", title: "Security of network services",                                mapTo: "PR.AC-01", pci: "R1.2" },
+        { controlId: "A.8.22", title: "Segregation of networks",                                     mapTo: "PR.AC-01", pci: "R1.3" },
+        { controlId: "A.8.23", title: "Web filtering",                                               mapTo: "DE.CM-01" },
+        { controlId: "A.8.24", title: "Use of cryptography",                                         mapTo: "PR.DS-01", pci: "R4.1, R4.2" },
+        { controlId: "A.8.25", title: "Secure development life cycle",                               mapTo: "GV.RM-01", pci: "R6.1" },
+        { controlId: "A.8.26", title: "Application security requirements",                           mapTo: "GV.RM-01", pci: "R6.2" },
+        { controlId: "A.8.27", title: "Secure system architecture and engineering principles",       mapTo: "GV.RM-01" },
+        { controlId: "A.8.28", title: "Secure coding",                                               mapTo: "GV.RM-01", pci: "R6.2" },
+        { controlId: "A.8.29", title: "Security testing in development and acceptance",              mapTo: "DE.CM-01", pci: "R11.3" },
+        { controlId: "A.8.30", title: "Outsourced development",                                      mapTo: "GV.RM-01" },
+        { controlId: "A.8.31", title: "Separation of development, test and production environments", mapTo: "GV.RM-01" },
+        { controlId: "A.8.32", title: "Change management",                                           mapTo: "GV.RM-01" },
+        { controlId: "A.8.33", title: "Test information",                                            mapTo: "PR.DS-01" },
+        { controlId: "A.8.34", title: "Protection of information systems during audit testing",      mapTo: "PR.AC-01" },
+      ],
+    },
+  ];
+
+  for (const d of isoDomains) {
+    await prisma.domain.create({
+      data: {
+        frameworkId: iso.id,
+        code: d.code,
+        name: d.name,
+        order: d.order,
+        controls: {
+          create: d.controls.map((c, idx) => ({
+            controlId: c.controlId,
+            order: idx + 1,
+            title: c.title,
+            description: c.title,
+            questions: {
+              create: [{
+                order: 1,
+                text: `How effectively is "${c.title}" implemented and maintained?`,
+                helpText: c.pci
+                  ? `ISO 27001:2022 ${c.controlId}. Maps to NIST CSF: ${c.mapTo} | PCI DSS: ${c.pci}`
+                  : `ISO 27001:2022 ${c.controlId}. Maps to NIST CSF: ${c.mapTo}`,
+                options: isoOptions,
+              }],
+            },
+          })),
         },
-      });
-    }
+      },
+    });
   }
 
-  // ── NIS2 DOMAINS + CONTROLS ───────────────────────────────────────────────
+  console.log("✅ ISO 27001:2022 seeded — 4 domains, 93 controls");
+
+  // ── NIS2 DIRECTIVE DOMAINS + CONTROLS (full ~30 controls) ───────────────────
   const nis2Options = JSON.stringify([
     { value: 3, label: "Fully implemented with evidence" },
     { value: 2, label: "Partially implemented" },
@@ -449,35 +548,82 @@ async function main() {
     { value: 0, label: "Not implemented" },
   ]);
 
-  const nis2DomainCount = await prisma.domain.count({ where: { frameworkId: nis2.id } });
-  if (nis2DomainCount === 0) {
-    const nis2Domains = [
-      { code: "Art20", name: "Article 20 — Security Measures", controls: [
-        { controlId: "N20.1", title: "Risk analysis and security policies", mapTo: "GV.RM-01" },
-        { controlId: "N20.2", title: "Incident handling and reporting", mapTo: "RS.RP-01" },
-        { controlId: "N20.3", title: "Business continuity and crisis management", mapTo: "RC.RP-01" },
-      ]},
-      { code: "Art21", name: "Article 21 — Risk Management", controls: [
-        { controlId: "N21.1", title: "Appropriate security measures", mapTo: "PR.AC-01" },
-        { controlId: "N21.2", title: "Supply chain security", mapTo: "GV.RM-01" },
-        { controlId: "N21.3", title: "Asset security and encryption", mapTo: "PR.DS-01" },
-      ]},
-      { code: "Art30", name: "Article 30 — Role of National Authorities", controls: [
-        { controlId: "N30.1", title: "Cooperation with authorities", mapTo: "GV.OC-01" },
-        { controlId: "N30.2", title: "Supervision and enforcement", mapTo: "GV.OC-01" },
-      ]},
-    ];
+  // Always refresh NIS2 to ensure full coverage
+  await prisma.domain.deleteMany({ where: { frameworkId: nis2.id } });
 
-    for (let i = 0; i < nis2Domains.length; i += 1) {
-      const d = nis2Domains[i];
-      await prisma.domain.create({
-        data: {
-          frameworkId: nis2.id,
-          code: d.code,
-          name: d.name,
-          order: i + 1,
-          controls: {
-            create: d.controls.map((c, idx) => ({
+  const nis2Domains: Array<{
+    code: string; name: string; order: number;
+    controls: Array<{ controlId: string; title: string; mapTo: string; iso?: string; pci?: string }>;
+  }> = [
+    {
+      code: "Art20", name: "Article 20 — Governance & Accountability", order: 1,
+      controls: [
+        { controlId: "N20.1", title: "Management body approval of cybersecurity measures",           mapTo: "GV.OC-01", iso: "A.5.1, A.5.4",  pci: "R12.1" },
+        { controlId: "N20.2", title: "Management body cybersecurity training",                        mapTo: "GV.OC-01", iso: "A.6.3",          pci: "R12.6" },
+        { controlId: "N20.3", title: "Management liability and oversight",                            mapTo: "GV.OC-01", iso: "A.5.4, A.5.35",  pci: "R12.1" },
+      ],
+    },
+    {
+      code: "Art21", name: "Article 21 — Cybersecurity Risk-Management Measures", order: 2,
+      controls: [
+        { controlId: "N21.1",  title: "Policies on risk analysis and information system security",   mapTo: "GV.RM-01", iso: "A.5.1, A.5.8",   pci: "R12.3" },
+        { controlId: "N21.2",  title: "Incident handling",                                           mapTo: "RS.RP-01", iso: "A.5.24, A.5.26"                },
+        { controlId: "N21.3",  title: "Business continuity, backup and disaster recovery",           mapTo: "RC.RP-01", iso: "A.5.29, A.8.13"                },
+        { controlId: "N21.4",  title: "Supply chain security",                                       mapTo: "GV.RM-01", iso: "A.5.19, A.5.21", pci: "R12.3" },
+        { controlId: "N21.5",  title: "Security in network and information systems acquisition and development", mapTo: "GV.RM-01", iso: "A.8.25, A.8.26", pci: "R6.1, R6.2" },
+        { controlId: "N21.6",  title: "Policies and procedures to assess effectiveness of measures", mapTo: "GV.RM-01", iso: "A.5.35, A.5.36", pci: "R12.3" },
+        { controlId: "N21.7",  title: "Basic cyber hygiene practices and cybersecurity training",    mapTo: "GV.OC-01", iso: "A.6.3",           pci: "R12.6" },
+        { controlId: "N21.8",  title: "Policies on use of cryptography and encryption",              mapTo: "PR.DS-01", iso: "A.8.24",          pci: "R4.1, R4.2" },
+        { controlId: "N21.9",  title: "Human resources security, access control and asset management", mapTo: "PR.AC-01", iso: "A.5.9, A.5.15", pci: "R7.1, R8.1" },
+        { controlId: "N21.10", title: "Use of multi-factor authentication",                          mapTo: "PR.AC-01", iso: "A.8.5",           pci: "R8.3" },
+      ],
+    },
+    {
+      code: "Art23", name: "Article 23 — Reporting Obligations", order: 3,
+      controls: [
+        { controlId: "N23.1", title: "Early warning within 24 hours of significant incident",        mapTo: "RS.RP-01", iso: "A.5.25" },
+        { controlId: "N23.2", title: "Incident notification within 72 hours",                        mapTo: "RS.RP-01", iso: "A.5.26" },
+        { controlId: "N23.3", title: "Intermediate report on request",                               mapTo: "RS.RP-01", iso: "A.5.26" },
+        { controlId: "N23.4", title: "Final report within 1 month",                                  mapTo: "RS.RP-01", iso: "A.5.27" },
+      ],
+    },
+    {
+      code: "Art24", name: "Article 24 — Supply Chain Security", order: 4,
+      controls: [
+        { controlId: "N24.1", title: "Assessment of supply chain cybersecurity practices",           mapTo: "GV.RM-01", iso: "A.5.19, A.5.21", pci: "R12.3" },
+        { controlId: "N24.2", title: "Contractual cybersecurity requirements with suppliers",        mapTo: "GV.RM-01", iso: "A.5.20",          pci: "R12.3" },
+        { controlId: "N24.3", title: "Monitoring and auditing of suppliers",                         mapTo: "DE.CM-01", iso: "A.5.22"                        },
+      ],
+    },
+    {
+      code: "Art25", name: "Article 25 — Technical Standards", order: 5,
+      controls: [
+        { controlId: "N25.1", title: "Use of European cybersecurity certification schemes",          mapTo: "GV.OC-01", iso: "A.5.31" },
+        { controlId: "N25.2", title: "Adoption of ENISA baseline guidelines",                        mapTo: "GV.OC-01", iso: "A.5.36" },
+      ],
+    },
+    {
+      code: "Art30", name: "Article 30 — Registration & Oversight", order: 6,
+      controls: [
+        { controlId: "N30.1", title: "Registration with national competent authority",               mapTo: "GV.OC-01", iso: "A.5.31" },
+        { controlId: "N30.2", title: "Information provision to authority on request",                mapTo: "GV.OC-01", iso: "A.5.31" },
+      ],
+    },
+  ];
+
+  for (const d of nis2Domains) {
+    await prisma.domain.create({
+      data: {
+        frameworkId: nis2.id,
+        code: d.code,
+        name: d.name,
+        order: d.order,
+        controls: {
+          create: d.controls.map((c, idx) => {
+            const parts = [`NIS2 ${c.controlId}. Maps to NIST CSF: ${c.mapTo}`];
+            if (c.iso) parts.push(`ISO 27001: ${c.iso}`);
+            if (c.pci) parts.push(`PCI DSS: ${c.pci}`);
+            return {
               controlId: c.controlId,
               order: idx + 1,
               title: c.title,
@@ -485,17 +631,19 @@ async function main() {
               questions: {
                 create: [{
                   order: 1,
-                  text: `How effectively is ${c.title.toLowerCase()} implemented?`,
-                  helpText: `NIS2 ${c.controlId}. Cross-maps to NIST CSF: ${c.mapTo}`,
+                  text: `How effectively is "${c.title}" implemented?`,
+                  helpText: parts.join(" | "),
                   options: nis2Options,
                 }],
               },
-            })),
-          },
+            };
+          }),
         },
-      });
-    }
+      },
+    });
   }
+
+  console.log("✅ NIS2 Directive seeded — 6 domains, 24 controls");
 
   // ── DEMO vCISO USER ──────────────────────────────────────────────────────────
   const vcisoPassword = await bcrypt.hash("Demo1234!", 12);
