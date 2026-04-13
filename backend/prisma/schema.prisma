@@ -21,12 +21,13 @@ model User {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  managedOrgs    ClientOrg[]    @relation("vCISOToOrg")
-  exportJobs     ExportJob[]
-  clientOrgId    String?
-  clientOrg      ClientOrg?     @relation("OrgMembers", fields: [clientOrgId], references: [id])
-  refreshTokens  RefreshToken[]
-  assessments    Assessment[]   @relation("AssessmentCreator")
+  managedOrgs       ClientOrg[]    @relation("vCISOToOrg")
+  exportJobs        ExportJob[]
+  clientOrgId       String?
+  clientOrg         ClientOrg?     @relation("OrgMembers", fields: [clientOrgId], references: [id])
+  refreshTokens     RefreshToken[]
+  assessments       Assessment[]   @relation("AssessmentCreator")
+  customFrameworks  Framework[]    @relation("CustomFrameworks")
 
   @@map("users")
 }
@@ -94,8 +95,11 @@ model Framework {
   region      String   @default("Global")
   description String
   isActive    Boolean  @default(true)
+  isCustom    Boolean  @default(false)
+  ownerId     String?
   createdAt   DateTime @default(now())
 
+  owner         User?          @relation("CustomFrameworks", fields: [ownerId], references: [id])
   domains       Domain[]
   assessments   Assessment[]
   orgFrameworks OrgFramework[]
